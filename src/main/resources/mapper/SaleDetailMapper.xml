@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ministore.pointofsale.mapper.SaleDetailMapper">
+    <resultMap id="BaseResult" type="com.ministore.pointofsale.model.SaleDetail">
+        <result column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="price" property="price"/>
+        <result column="sale_id" property="saleId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, product_id, quantity, price, sale_id
+    </sql>
+
+    <select id="queryAll" resultMap="BaseResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sale_detail
+    </select>
+
+    <insert id="insert" parameterType="com.ministore.pointofsale.model.SaleDetail">
+        INSERT INTO sale_detail(product_id, quantity, price, sale_id)
+        VALUES (#{productId}, #{quantity}, #{price}, #{saleId})
+    </insert>
+
+    <select id="queryById" resultMap="BaseResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sale_detail
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateById" parameterType="com.ministore.pointofsale.model.SaleDetail">
+        UPDATE sale_detail
+        <set>
+            <if test="productId != null">
+                product_id = #{productId},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="price != null">
+                change = #{change}
+            </if>
+            <if test="saleId != null">
+                sale_id = #{saleId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM sale
+        where id = #{id}
+    </delete>
+
+</mapper>

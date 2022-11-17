@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ministore.pointofsale.mapper.ProductMapper">
+    <resultMap id="BaseResult" type="com.ministore.pointofsale.model.Product">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="quantity" property="quantity"/>
+        <result column="unit" property="unit"/>
+        <result column="unit_price" property="unitPrice"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, `name`, quantity, unit, unit_price
+    </sql>
+
+    <select id="queryAll" resultMap="BaseResult" >
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM product
+    </select>
+
+    <insert id="insert" parameterType="com.ministore.pointofsale.model.Product">
+        INSERT INTO product(name, quantity, unit, unit_price)
+        VALUES (#{name}, #{quantity}, #{unit}, #{unitPrice})
+    </insert>
+
+    <select id="queryById" resultMap="BaseResult">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM product
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateById" parameterType="com.ministore.pointofsale.model.Product">
+        UPDATE product
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="unit != null and unit != ''">
+                unit = #{unit},
+            </if>
+            <if test="unitPrice != null">
+                unit_price = #{unitPrice}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="adjustQuantityById">
+        UPDATE product
+        SET quantity = quantity + #{changeInQuantity}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM product
+        where id = #{id}
+    </delete>
+
+</mapper>
+
+
+
+
