@@ -31,6 +31,13 @@
         WHERE id = #{id}
     </select>
 
+    <select id="queryByName" resultMap="BaseResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product
+        WHERE `name` = #{name}
+    </select>
+
     <update id="updateById" parameterType="com.ministore.pointofsale.model.Product">
         UPDATE product
         <set>

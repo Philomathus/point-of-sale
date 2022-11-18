@@ -15,6 +15,8 @@ public interface ProductMapper {
 
     Product queryById(@Param("id") Long id);
 
+    Product queryByName(@Param("name") String name);
+
     int updateById(Product product);
 
     int adjustQuantityById(@Param("id") Long id, @Param("changeInQuantity") Double changeInQuantity);

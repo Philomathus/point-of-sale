@@ -19,9 +19,24 @@
         FROM sale_detail
     </select>
 
+    <select id="queryAllBySaleId" resultMap="BaseResult">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sale_detail
+        WHERE sale_id = #{saleId}
+    </select>
+
     <insert id="insert" parameterType="com.ministore.pointofsale.model.SaleDetail">
         INSERT INTO sale_detail(product_id, quantity, price, sale_id)
         VALUES (#{productId}, #{quantity}, #{price}, #{saleId})
+    </insert>
+
+    <insert id="batchInsert" parameterType="com.ministore.pointofsale.model.SaleDetail">
+        INSERT INTO sale_detail(product_id, quantity, price, sale_id)
+        VALUES
+        <foreach collection="saleDetailList" item="saleDetail" separator=",">
+            (#{saleDetail.productId}, #{saleDetail.quantity}, #{saleDetail.price}, #{saleDetail.saleId})
+        </foreach>
     </insert>
 
     <select id="queryById" resultMap="BaseResult">
@@ -47,12 +62,12 @@
                 sale_id = #{saleId}
             </if>
         </set>
-        where id = #{id}
+        WHERE id = #{id}
     </update>
 
     <delete id="deleteById">
-        DELETE FROM sale
-        where id = #{id}
+        DELETE FROM sale_detail
+        WHERE id = #{id}
     </delete>
 
 </mapper>

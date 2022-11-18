@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Sale {
     private Long id;
     private LocalDateTime dateOfPurchase;
+    private Double totalPrice;
     private Double cashReceived;
     private Double change;
 }

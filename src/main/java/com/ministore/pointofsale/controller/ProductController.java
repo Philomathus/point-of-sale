@@ -21,39 +21,19 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseVO<ServiceStatusCode> addProduct(@RequestBody Product product) {
-
-        try {
-            productService.add(product);
-            return ResponseHelper.success();
-        } catch(ServiceException ex) {
-            return new ResponseVO<>(ex.getCode(), ex.getMessage());
-        } catch(Exception ex) {
-            return ResponseHelper.error();
-        }
-
+        productService.add(product);
+        return ResponseHelper.success();
     }
 
     @PostMapping("/getAll")
     public ResponseVO<List<Product>> getALl() {
-
-        try {
-            return ResponseHelper.success(productService.getAll());
-        } catch(Exception ex) {
-            return ResponseHelper.error();
-        }
-
+        return ResponseHelper.success(productService.getAll());
     }
 
     @PostMapping("/adjustQuantityById")
     public ResponseVO<ServiceStatusCode> adjustQuantityById(@RequestBody ProductDto productDto) {
-
-        try {
-            productService.adjustQuantityById(productDto.getId(), productDto.getChangeInQuantity());
-            return ResponseHelper.success();
-        } catch(Exception ex) {
-            return ResponseHelper.error();
-        }
-
+        productService.adjustQuantityById(productDto.getId(), productDto.getChangeInQuantity());
+        return ResponseHelper.success();
     }
 
 }

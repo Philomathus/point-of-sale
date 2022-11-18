@@ -4,12 +4,13 @@
     <resultMap id="BaseResult" type="com.ministore.pointofsale.model.Sale">
         <result column="id" property="id"/>
         <result column="date_of_purchase" property="dateOfPurchase"/>
+        <result column="total_price" property="totalPrice"/>
         <result column="cash_received" property="cashReceived"/>
         <result column="change" property="change"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, date_of_purchase, cash_received, change
+        id, date_of_purchase, total_price, cash_received, `change`
     </sql>
 
     <select id="queryAll" resultMap="BaseResult">
@@ -18,9 +19,9 @@
         FROM sale
     </select>
 
-    <insert id="insert" parameterType="com.ministore.pointofsale.model.Sale">
-        INSERT INTO sale(date_of_purchase, cash_received, change)
-        VALUES (#{dateOfPurchase}, #{cashReceived}, #{change})
+    <insert id="insert" parameterType="com.ministore.pointofsale.model.Sale" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO sale(date_of_purchase, total_price, cash_received, `change`)
+        VALUES (#{dateOfPurchase},  #{totalPrice}, #{cashReceived}, #{change})
     </insert>
 
     <select id="queryById" resultMap="BaseResult">
@@ -36,11 +37,14 @@
             <if test="dateOfPurchase != null">
                 date_of_purchase = #{dateOfPurchase},
             </if>
+            <if test="totalPrice != null">
+                total_price = #{totalPrice},
+            </if>
             <if test="cashReceived != null">
                 cash_received = #{cashReceived},
             </if>
             <if test="change != null">
-                change = #{change}
+                `change` = #{change}
             </if>
         </set>
         where id = #{id}

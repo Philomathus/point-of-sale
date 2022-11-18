@@ -1,8 +1,10 @@
 package com.ministore.pointofsale.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ministore.pointofsale.vo.ResponseVO;
 import com.ministore.pointofsale.vo.ServiceStatusCode;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 @Data
 public class ServiceException extends RuntimeException {
@@ -57,7 +59,9 @@ public class ServiceException extends RuntimeException {
         return new ResponseVO(this.code, this.message, this.data);
     }
 
-    public ResponseVO<Object> toResponseVO(ServiceException se) {
-        return new ResponseVO(se.code, se.getMessage(), se.data);
+    @SneakyThrows
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(toResponseVO());
     }
 }

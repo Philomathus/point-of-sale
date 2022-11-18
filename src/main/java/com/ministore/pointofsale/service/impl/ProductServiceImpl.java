@@ -39,6 +39,10 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException(500, "A non-negative unit-price must be provided!");
         }
 
+        if(productMapper.queryByName(product.getName()) != null) {
+            throw new ServiceException(500, "The name already exists!");
+        }
+
         productMapper.insert(product);
     }
 
@@ -75,7 +79,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void adjustQuantityById(Long id, Double changeInQuantity) {
-
         if(id == null) {
             throw new ServiceException(500, "The id must not be null!");
         }
@@ -84,6 +87,18 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException(500, "The quantity must not be null!");
         }
 
-        productMapper.adjustQuantityById(id, changeInQuantity);
+        Product product = productMapper.queryById(id);
+
+        if(product == null) {
+            throw new ServiceException(500, "The product does not exist!");
+        }
+
+        product.setQuantity(product.getQuantity() + changeInQuantity);
+
+        if(product.getQuantity() < 0) {
+            throw new ServiceException(500, "Insufficient quantity!");
+        }
+
+        productMapper.updateById(product);
     }
 }
