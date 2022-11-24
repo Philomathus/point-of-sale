@@ -8,15 +8,12 @@ import com.ministore.pointofsale.mapper.SaleMapper;
 import com.ministore.pointofsale.model.Product;
 import com.ministore.pointofsale.model.Sale;
 import com.ministore.pointofsale.model.SaleDetail;
-import com.ministore.pointofsale.service.SaleService;
+import com.ministore.pointofsale.service.iface.SaleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;

@@ -1,4 +1,4 @@
-package com.ministore.pointofsale.service;
+package com.ministore.pointofsale.service.iface;
 
 import com.ministore.pointofsale.model.Product;
 

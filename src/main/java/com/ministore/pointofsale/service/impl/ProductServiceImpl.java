@@ -3,7 +3,7 @@ package com.ministore.pointofsale.service.impl;
 import com.ministore.pointofsale.exception.ServiceException;
 import com.ministore.pointofsale.mapper.ProductMapper;
 import com.ministore.pointofsale.model.Product;
-import com.ministore.pointofsale.service.ProductService;
+import com.ministore.pointofsale.service.iface.ProductService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 

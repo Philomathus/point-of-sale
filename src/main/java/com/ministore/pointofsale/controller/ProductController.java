@@ -1,9 +1,8 @@
 package com.ministore.pointofsale.controller;
 
 import com.ministore.pointofsale.dto.ProductDto;
-import com.ministore.pointofsale.exception.ServiceException;
 import com.ministore.pointofsale.model.Product;
-import com.ministore.pointofsale.service.ProductService;
+import com.ministore.pointofsale.service.iface.ProductService;
 import com.ministore.pointofsale.vo.ResponseHelper;
 import com.ministore.pointofsale.vo.ResponseVO;
 import com.ministore.pointofsale.vo.ServiceStatusCode;
@@ -26,7 +25,7 @@ public class ProductController {
     }
 
     @PostMapping("/getAll")
-    public ResponseVO<List<Product>> getALl() {
+    public ResponseVO<List<Product>> getAll() {
         return ResponseHelper.success(productService.getAll());
     }
 

@@ -1,12 +1,10 @@
 package com.ministore.pointofsale.controller;
 
 import com.ministore.pointofsale.dto.SaleDto;
-import com.ministore.pointofsale.exception.ServiceException;
-import com.ministore.pointofsale.model.Product;
 import com.ministore.pointofsale.model.Sale;
 import com.ministore.pointofsale.model.SaleDetail;
-import com.ministore.pointofsale.service.ProductService;
-import com.ministore.pointofsale.service.SaleService;
+import com.ministore.pointofsale.service.iface.ProductService;
+import com.ministore.pointofsale.service.iface.SaleService;
 import com.ministore.pointofsale.vo.ResponseHelper;
 import com.ministore.pointofsale.vo.ResponseVO;
 import com.ministore.pointofsale.vo.ServiceStatusCode;

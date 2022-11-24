@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "com.ministore.pointofsale.service.redis.ttl",
+      "type": "java.lang.Integer",
+      "description": "Description for com.ministore.pointofsale.service.redis.ttl."
+    },
+    {
+      "name": "com.ministore.pointofsale.service.redis.url",
+      "type": "java.lang.String",
+      "description": "Description for com.ministore.pointofsale.service.redis.url."
+    }
+  ] }
