@@ -4,6 +4,7 @@ import com.ministore.pointofsale.dto.RedisDto;
 import com.ministore.pointofsale.service.impl.RedisService;
 import com.ministore.pointofsale.vo.ResponseHelper;
 import com.ministore.pointofsale.vo.ResponseVO;
+import com.ministore.pointofsale.vo.ServiceStatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,9 @@ public class RedisController {
     private RedisService redisService;
 
     @PostMapping("/add")
-    public void add(@RequestBody RedisDto redisDto) {
+    public ResponseVO<ServiceStatusCode> add(@RequestBody RedisDto redisDto) {
         redisService.set(redisDto.getKey(), redisDto.getValue());
+        return ResponseHelper.success();
     }
 
     @PostMapping("/get")
