@@ -22,9 +22,6 @@ import java.util.List;
 public class SaleController {
 
     @Autowired
-    private ProductService productService;
-
-    @Autowired
     private SaleService saleService;
 
     @PostMapping("/getAll")
@@ -34,21 +31,12 @@ public class SaleController {
 
     @PostMapping("/getAllWithDetails")
     public ResponseVO<List<SaleDto>> getAllWithDetails() {
-
         return ResponseHelper.success(saleService.getAllWithDetails());
-
     }
 
-    @PostMapping("/addSaleWithDetails")
-    @Transactional
+    @PostMapping("/makeSaleWithDetails")
     public ResponseVO<ServiceStatusCode> addSaleWithDetails(@RequestBody SaleDto saleDto) {
-
-        saleService.addSaleWithDetails(saleDto);
-
-        for(SaleDetail saleDetail : saleDto.getSaleDetails()) {
-            productService.adjustQuantityById(saleDetail.getProductId(), -saleDetail.getQuantity());
-        }
-
+        saleService.makeSaleWithDetails(saleDto);
         return ResponseHelper.success();
     }
 

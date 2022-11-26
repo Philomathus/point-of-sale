@@ -15,6 +15,6 @@ public interface SaleService {
 
     SaleDto getByIdWithDetails(Long id);
 
-    void addSaleWithDetails(SaleDto saleDto);
+    void makeSaleWithDetails(SaleDto saleDto);
 
 }

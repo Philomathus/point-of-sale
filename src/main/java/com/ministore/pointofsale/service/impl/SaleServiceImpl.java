@@ -8,6 +8,7 @@ import com.ministore.pointofsale.mapper.SaleMapper;
 import com.ministore.pointofsale.model.Product;
 import com.ministore.pointofsale.model.Sale;
 import com.ministore.pointofsale.model.SaleDetail;
+import com.ministore.pointofsale.service.iface.ProductService;
 import com.ministore.pointofsale.service.iface.SaleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class SaleServiceImpl implements SaleService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private ProductService productService;
 
     @Override
     public List<Sale> getAll() {
@@ -80,7 +84,15 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional
-    public void addSaleWithDetails(SaleDto saleDto) {
+    public void makeSaleWithDetails(SaleDto saleDto) {
+        addSaleWithDetails(saleDto);
+
+        for(SaleDetail saleDetail : saleDto.getSaleDetails()) {
+            productService.adjustQuantityById(saleDetail.getProductId(), -saleDetail.getQuantity());
+        }
+    }
+
+    private void addSaleWithDetails(SaleDto saleDto) {
 
         if(saleDto == null) {
             throw new ServiceException(500, "The saleDto cannot be null!");
