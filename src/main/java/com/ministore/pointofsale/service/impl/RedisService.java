@@ -41,7 +41,11 @@ public class RedisService {
         }
 
         if(redisClient != null) {
-            redisClient.close();
+            redisClient.shutdown();
+        }
+
+        if(redisson != null) {
+            redisson.shutdown();
         }
     }
 
