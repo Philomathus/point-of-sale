@@ -3,6 +3,9 @@ package com.ministore.pointofsale.service.impl;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,6 @@ import java.util.concurrent.TimeoutException;
 @Service
 public class RedisService {
 
-    @Value("${com.ministore.pointofsale.service.redis.ttl}")
-    private Integer ttl;
-
     @Value("${com.ministore.pointofsale.service.redis.url}")
     private String url;
 
@@ -23,10 +23,15 @@ public class RedisService {
 
     private StatefulRedisConnection<String, String> statefulRedisConnection;
 
+    private RedissonClient redisson;
+
     @PostConstruct
     private void init() {
         redisClient = RedisClient.create(url);
         statefulRedisConnection = redisClient.connect();
+        Config config = new Config();
+        config.useSingleServer().setAddress(url);
+        redisson = Redisson.create(config);
     }
 
     @PreDestroy
@@ -76,6 +81,10 @@ public class RedisService {
         }
 
         return false;
+    }
+
+    public RedissonClient getRedisson() {
+        return redisson;
     }
 
     public void lock(String key, long keyExpireSeconds, long retrySeconds, long acquireLockMaxSeconds) throws InterruptedException, TimeoutException {

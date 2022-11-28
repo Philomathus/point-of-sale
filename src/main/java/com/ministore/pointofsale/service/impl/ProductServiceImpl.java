@@ -5,11 +5,13 @@ import com.ministore.pointofsale.mapper.ProductMapper;
 import com.ministore.pointofsale.model.Product;
 import com.ministore.pointofsale.service.iface.ProductService;
 import org.apache.logging.log4j.util.Strings;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @Service
@@ -92,28 +94,35 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException(500, "The quantity must not be null!");
         }
 
-        //lock
+        RLock lock = redisService.getRedisson().getFairLock("adjustQuantityLock");
+
         try {
-            redisService.lock("adjustQuantity", 60, 3, 120);
-        } catch (Exception e) {
-            throw new ServiceException(500, "The server took too long to respond!");
+            boolean res = lock.tryLock(100, 10, TimeUnit.SECONDS);
+
+            if(res) {
+
+                try {
+                    Product product = productMapper.queryById(id);
+
+                    if(product == null) {
+                        throw new ServiceException(500, "The product does not exist!");
+                    }
+
+                    product.setQuantity(product.getQuantity() + changeInQuantity);
+
+                    if(product.getQuantity() < 0) {
+                        throw new ServiceException(500, "Insufficient quantity!");
+                    }
+
+                    productMapper.updateById(product);
+                } finally {
+                    lock.unlock();
+                }
+
+            }
+
+        } catch (InterruptedException e) {
+            throw new ServiceException(500, "The thread was interrupted!");
         }
-
-        Product product = productMapper.queryById(id);
-
-        if(product == null) {
-            throw new ServiceException(500, "The product does not exist!");
-        }
-
-        product.setQuantity(product.getQuantity() + changeInQuantity);
-
-        if(product.getQuantity() < 0) {
-            throw new ServiceException(500, "Insufficient quantity!");
-        }
-
-        productMapper.updateById(product);
-
-        //unlock
-        redisService.unlock("adjustQuantity");
     }
 }
