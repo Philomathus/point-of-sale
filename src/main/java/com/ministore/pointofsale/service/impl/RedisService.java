@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 @Service
@@ -91,11 +92,16 @@ public class RedisService {
         return redisson;
     }
 
+    private static final String listKey = "thread_queue";
+
     public void lock(String key, long keyExpireSeconds, long retrySeconds, long acquireLockMaxSeconds) throws InterruptedException, TimeoutException {
 
         final long startTimeMillis = System.currentTimeMillis();
 
-        while(!setIfAbsent(key, key, keyExpireSeconds)) {
+        final String threadName = Thread.currentThread().getName();
+        statefulRedisConnection.sync().rpush(listKey, threadName);
+
+        while(Objects.equals(statefulRedisConnection.sync().lindex(listKey, 0), threadName) && !setIfAbsent(key, key, keyExpireSeconds)) {
 
             Thread.sleep(retrySeconds);
 
@@ -107,5 +113,6 @@ public class RedisService {
 
     public void unlock(String key) {
         del(key);
+        statefulRedisConnection.sync().lpop(listKey);
     }
 }
