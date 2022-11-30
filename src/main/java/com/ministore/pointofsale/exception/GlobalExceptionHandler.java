@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ServiceStatusCode> handleServiceException(ServiceException ex) {
-        return new ResponseEntity<>(new ServiceStatusCode(ex.getCode(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ServiceStatusCode(ex.getCode(), ex.getMessage(), "error"), HttpStatus.BAD_REQUEST);
     }
 
 }
