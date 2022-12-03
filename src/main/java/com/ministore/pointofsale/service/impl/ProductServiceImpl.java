@@ -97,32 +97,28 @@ public class ProductServiceImpl implements ProductService {
         RLock lock = redisService.getRedisson().getFairLock("adjustQuantityLock");
 
         try {
-            boolean res = lock.tryLock(100, 10, TimeUnit.SECONDS);
-
-            if(res) {
-
-                try {
-                    Product product = productMapper.queryById(id);
-
-                    if(product == null) {
-                        throw new ServiceException(500, "The product does not exist!");
-                    }
-
-                    product.setQuantity(product.getQuantity() + changeInQuantity);
-
-                    if(product.getQuantity() < 0) {
-                        throw new ServiceException(500, "Insufficient quantity!");
-                    }
-
-                    productMapper.updateById(product);
-                } finally {
-                    lock.unlock();
-                }
-
+            if(!lock.tryLock(100, 10, TimeUnit.SECONDS)) {
+                return;
             }
+
+            Product product = productMapper.queryById(id);
+
+            if(product == null) {
+                throw new ServiceException(500, "The product does not exist!");
+            }
+
+            product.setQuantity(product.getQuantity() + changeInQuantity);
+
+            if(product.getQuantity() < 0) {
+                throw new ServiceException(500, "Insufficient quantity!");
+            }
+
+            productMapper.updateById(product);
 
         } catch (InterruptedException e) {
             throw new ServiceException(500, "The thread was interrupted!");
+        } finally {
+            lock.unlock();
         }
     }
 }
